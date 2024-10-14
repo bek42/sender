@@ -1,31 +1,34 @@
-input.onButtonPressed(Button.A, function on_button_pressed_a() {
-    
-    radio.sendNumber(1)
-    item += 1
+/**
+ * 3 seconds delay between weather data sends
+ */
+input.onButtonPressed(Button.A, function () {
+	
 })
-input.onButtonPressed(Button.B, function on_button_pressed_b() {
+function send_weather_data () {
+    lightVal2 = input.lightLevel()
+    row = "" + Math.idiv(weatherbit.temperature(), 100) + ";" + ("" + Math.idiv(weatherbit.humidity(), 1024)) + ";" + ("" + Math.idiv(weatherbit.pressure(), 25600)) + ";" + ("" + weatherbit.altitude())
+    radio.setGroup(weather_group)
+    // Switch to weather data group
+    radio.sendString(row)
+    // send the weather info via radio
+    basic.pause(50)
+}
+input.onButtonPressed(Button.B, function () {
     basic.showString("S")
     basic.clearScreen()
 })
+let lightVal2 = 0
+let weather_group = 0
+let row = ""
+let lightVal = 0
+let row2 = ""
+row = ""
+weather_group = 1
 radio.setGroup(1)
 radio.setTransmitPower(7)
-let item = 0
-let lightVal = 0
 weatherbit.startWeatherMonitoring()
-basic.forever(function on_forever() {
-    
-    lightVal = input.lightLevel()
-    if (item == 0) {
-        basic.showString("Temp C: ")
-        basic.showNumber(Math.idiv(weatherbit.temperature(), 100))
-    } else if (item == 1) {
-        basic.showString("Humidity %: ")
-        basic.showNumber(Math.idiv(weatherbit.humidity(), 1024))
-    } else if (item == 2) {
-        basic.showString("Pressure hPa: ")
-        basic.showNumber(Math.idiv(weatherbit.pressure(), 25600))
-    } else {
-        item = 0
-    }
-    
+basic.forever(function () {
+    // Send weather data every 3 seconds
+    send_weather_data()
+    basic.pause(3000)
 })
