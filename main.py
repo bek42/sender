@@ -5,7 +5,10 @@ def on_button_pressed_a():
 input.on_button_pressed(Button.A, on_button_pressed_a)
 
 def send_rainfall_data():
-    return "1"
+    rain_group = 1
+    radio.set_group(rain_group)
+    radio.send_string("1")
+    
 def send_weather_data():
     global lightVal, row
     weather_group = 0
@@ -34,7 +37,6 @@ def on_forever():
 basic.forever(on_forever)
 
 def on_forever2():
-    rain_group = 1
-    radio.set_group(rain_group)
+    
     send_rainfall_data()
 basic.forever(on_forever2)

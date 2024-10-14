@@ -2,8 +2,10 @@
 input.onButtonPressed(Button.A, function on_button_pressed_a() {
     
 })
-function send_rainfall_data(): string {
-    return "1"
+function send_rainfall_data() {
+    let rain_group = 1
+    radio.setGroup(rain_group)
+    radio.sendString("1")
 }
 
 function send_weather_data() {
@@ -32,7 +34,5 @@ basic.forever(function on_forever() {
     basic.pause(3000)
 })
 basic.forever(function on_forever2() {
-    let rain_group = 1
-    radio.setGroup(rain_group)
     send_rainfall_data()
 })
