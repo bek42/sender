@@ -1,22 +1,14 @@
 # 3 seconds delay between weather data sends
 
-row = ""
-row2 = ""
-lightVal = 0
-row = ""
-weather_group = 0
-weather_group = 1
-radio.set_group(1)
-radio.set_transmit_power(7)
-weatherbit.start_weather_monitoring()
-
-
 def on_button_pressed_a():
     pass
 input.on_button_pressed(Button.A, on_button_pressed_a)
 
+def send_rainfall_data():
+    return "1"
 def send_weather_data():
-    global row
+    global lightVal, row
+    weather_group = 0
     lightVal = input.light_level()
     row = "" + str(Math.idiv(weatherbit.temperature(), 100)) + ";" + ("" + str(Math.idiv(weatherbit.humidity(), 1024))) + ";" + ("" + str(Math.idiv(weatherbit.pressure(), 25600))) + ";" + ("" + str(weatherbit.altitude()))
     radio.set_group(weather_group)
@@ -30,17 +22,19 @@ def on_button_pressed_b():
     basic.clear_screen()
 input.on_button_pressed(Button.B, on_button_pressed_b)
 
-def on_forever_weather():
+row = ""
+lightVal = 0
+radio.set_transmit_power(7)
+weatherbit.start_weather_monitoring()
+
+def on_forever():
     # Send weather data every 3 seconds
     send_weather_data()
     basic.pause(3000)
-basic.forever(on_forever_weather)
+basic.forever(on_forever)
 
-
-
-# def on_forever():
-    
-#     row2 = "" + str(Math.idiv(weatherbit.temperature(), 100)) + "," + ("h" + ("" + str(Math.idiv(weatherbit.humidity(), 1024)))) + "," + ("p" + ("" + str(Math.idiv(weatherbit.pressure(), 25600)))) + "," + ("a" + ("" + str(weatherbit.altitude())))
-#     radio.send_string(row2)
-#     basic.pause(1 * 3000)
-# basic.forever(on_forever)
+def on_forever2():
+    rain_group = 1
+    radio.set_group(rain_group)
+    send_rainfall_data()
+basic.forever(on_forever2)
